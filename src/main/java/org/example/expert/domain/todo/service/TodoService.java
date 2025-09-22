@@ -25,6 +25,14 @@ public class TodoService {
     private final TodoRepository todoRepository;
     private final WeatherClient weatherClient;
 
+    // Lv 1 - 1. POST /todos 호출 시 오류 수정
+    // 오류가 나는 이유 : 해당 클래스에 적용된 @Transactional의 readOnly 설정이 true로 되어있음.
+    // 이 설정이 적용된 경우 DB에 저장된 레코드의 생성/수정/삭제가 불가능함.
+    // 따라서, 클래스에 적용된 어노테이션을 삭제하고 모든 메서드의 쓰임에 따라 @Transactional 어노테이션을 적용하거나,
+    // 해당 메서드에 @Transactional(readOnly = false) 로 설정을 해 주어야 함.
+    // @Transactional 어노테이션의 경우, readOnly 설정의 기본 값이 false 이므로, @Transactional 로만 작성하여도 큰 지장은 없으나,
+    // 아래의 경우에는 이 문제를 파악하고 수정하였음을 명시하기 위해 readOnly 값을 false로 설정했음을 알림.
+    @Transactional(readOnly = false)
     public TodoSaveResponse saveTodo(AuthUser authUser, TodoSaveRequest todoSaveRequest) {
         User user = User.fromAuthUser(authUser);
 
