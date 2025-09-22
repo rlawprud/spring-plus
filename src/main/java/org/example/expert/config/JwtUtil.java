@@ -34,7 +34,9 @@ public class JwtUtil {
         key = Keys.hmacShaKeyFor(bytes);
     }
 
-    public String createToken(Long userId, String email, UserRole userRole) {
+    // Lv1 - 2. User 정보에 nickname 추가 및 JWT 페이로드에 nickname 정보 추가
+    // 입력받는 값에 user의 nickname을 추가하고, 이를 페이로드에 추가하여야 합니다.
+    public String createToken(Long userId, String email, UserRole userRole, String nickname) {
         Date date = new Date();
 
         return BEARER_PREFIX +
@@ -42,6 +44,7 @@ public class JwtUtil {
                         .setSubject(String.valueOf(userId))
                         .claim("email", email)
                         .claim("userRole", userRole)
+                        .claim("nickname", nickname) // KEY : nickname, VALUE : {nickname} 의 정보를 페이로드에 추가합니다.
                         .setExpiration(new Date(date.getTime() + TOKEN_TIME))
                         .setIssuedAt(date) // 발급일
                         .signWith(key, signatureAlgorithm) // 암호화 알고리즘

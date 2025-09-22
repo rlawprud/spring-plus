@@ -17,4 +17,7 @@ public class SignupRequest {
     private String password;
     @NotBlank
     private String userRole;
+    // Lv1 - 2. User 정보에 nickname 추가 및 JWT 페이로드에 nickname 정보 추가
+    @NotBlank
+    private String nickname;
 }

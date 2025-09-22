@@ -35,14 +35,19 @@ public class AuthService {
 
         UserRole userRole = UserRole.of(signupRequest.getUserRole());
 
+        // Lv1 - 2. User 정보에 nickname 추가 및 JWT 페이로드에 nickname 정보 추가
+        // nickname 정보를 request로 받아 새로운 유저 정보를 저장합니다.
         User newUser = new User(
                 signupRequest.getEmail(),
                 encodedPassword,
-                userRole
+                userRole,
+                signupRequest.getNickname()
         );
         User savedUser = userRepository.save(newUser);
 
-        String bearerToken = jwtUtil.createToken(savedUser.getId(), savedUser.getEmail(), userRole);
+        // Lv1 - 2. User 정보에 nickname 추가 및 JWT 페이로드에 nickname 정보 추가
+        // 저장한 유저 정보를 기준으로 새 토큰을 발급합니다. (회원가입 후 자동 로그인 기능)
+        String bearerToken = jwtUtil.createToken(savedUser.getId(), savedUser.getEmail(), userRole, savedUser.getNickname());
 
         return new SignupResponse(bearerToken);
     }
@@ -56,7 +61,9 @@ public class AuthService {
             throw new AuthException("잘못된 비밀번호입니다.");
         }
 
-        String bearerToken = jwtUtil.createToken(user.getId(), user.getEmail(), user.getUserRole());
+        // Lv1 - 2. User 정보에 nickname 추가 및 JWT 페이로드에 nickname 정보 추가
+        // 로그인 시 발급되는 토큰의 값에 닉네임을 추가함.
+        String bearerToken = jwtUtil.createToken(user.getId(), user.getEmail(), user.getUserRole(), user.getNickname());
 
         return new SigninResponse(bearerToken);
     }
