@@ -7,12 +7,28 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 public interface TodoRepository extends JpaRepository<Todo, Long> {
 
+    // Lv1 - 3. null 일 수 있는 값 weather, startDate - endDate 를 기준으로 검색할 수 있도록 수정
+    // 기존 쿼리
+    /*
     @Query("SELECT t FROM Todo t LEFT JOIN FETCH t.user u ORDER BY t.modifiedAt DESC")
     Page<Todo> findAllByOrderByModifiedAtDesc(Pageable pageable);
+    */
+    // 입력된 값이 NULL일 경우, 그냥 조회함.
+    // 입력된 값이 NULL이 아닐 경우, 조건 적용하여 조회함.
+    // (객체의 weather가 입력된 weather와 같은 경우, 수정일이 입력된 값 사이에 있는 경우)
+    @Query("SELECT t FROM Todo t" +
+            " WHERE (:weather IS NULL OR t.weather = :weather)" +
+                    "AND (:startDate IS NULL OR t.modifiedAt >= :startDate)" +
+                    "AND (:endDate IS NULL OR t.modifiedAt <= :endDate)")
+    Page<Todo> findSearchTodo(Pageable pageable,
+                              @Param("weather") String weather,
+                              @Param("startDate") LocalDateTime startDate,
+                              @Param("endDate") LocalDateTime endDate);
 
     @Query("SELECT t FROM Todo t " +
             "LEFT JOIN t.user " +
