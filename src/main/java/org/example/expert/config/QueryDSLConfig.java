@@ -2,6 +2,7 @@ package org.example.expert.config;
 
 // Lv 2 - 3. QueryDSL 추가 - QueryDSL 설정
 
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.springframework.context.annotation.Bean;
