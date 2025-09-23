@@ -58,6 +58,7 @@ class TodoControllerTest {
                 .andExpect(jsonPath("$.title").value(title));
     }
 
+    // Lv1 - 4. 테스트가 정상적으로 수행되도록 수정
     @Test
     void todo_단건_조회_시_todo가_존재하지_않아_예외가_발생한다() throws Exception {
         // given
@@ -68,10 +69,14 @@ class TodoControllerTest {
                 .thenThrow(new InvalidRequestException("Todo not found"));
 
         // then
+        // 예외가 발생해야 성공하는 테스트입니다.
+        // 이전의 코드에서는 동작이 성공한 경우 테스트 성공이 됩니다.
+        // 하지만, 부여된 조건으로는 무조건 예외가 발생하므로, 테스트가 성공할 수 없습니다.
+        // 따라서 -> 테스트 성공의 조건을 수정합니다.
         mockMvc.perform(get("/todos/{todoId}", todoId))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.status").value(HttpStatus.OK.name()))
-                .andExpect(jsonPath("$.code").value(HttpStatus.OK.value()))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.status").value(HttpStatus.BAD_REQUEST.name()))
+                .andExpect(jsonPath("$.code").value(HttpStatus.BAD_REQUEST.value()))
                 .andExpect(jsonPath("$.message").value("Todo not found"));
     }
 }
