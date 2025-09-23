@@ -30,7 +30,10 @@ public class Todo extends Timestamped {
     @OneToMany(mappedBy = "todo", cascade = CascadeType.REMOVE)
     private List<Comment> comments = new ArrayList<>();
 
-    @OneToMany(mappedBy = "todo")
+    // Lv 2 - 1. 일정(Todo) 의 담당자 자동 등록
+    // CascadeType.PERSIST 를 사용해 부모 객체가 저장될 때 자식 엔티티가 함께 저장되도록 설정합니다.
+    // 해당 속성을 통해 todo 객체 저장 시 manager도 함께 저장되도록 설정할 수 있습니다.
+    @OneToMany(mappedBy = "todo", cascade = CascadeType.PERSIST)
     private List<Manager> managers = new ArrayList<>();
 
     public Todo(String title, String contents, String weather, User user) {
