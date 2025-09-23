@@ -4,13 +4,16 @@ import org.example.expert.domain.todo.entity.Todo;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
 
-public interface TodoRepository extends JpaRepository<Todo, Long> {
+public interface TodoRepository extends
+        JpaRepository<Todo, Long>, JpaSpecificationExecutor<Todo>,
+        TodoQueryDSLRepository{
 
     // Lv1 - 3. null 일 수 있는 값 weather, startDate - endDate 를 기준으로 검색할 수 있도록 수정
     // 기존 쿼리
@@ -30,8 +33,10 @@ public interface TodoRepository extends JpaRepository<Todo, Long> {
                               @Param("startDate") LocalDateTime startDate,
                               @Param("endDate") LocalDateTime endDate);
 
+    /*
     @Query("SELECT t FROM Todo t " +
             "LEFT JOIN t.user " +
             "WHERE t.id = :todoId")
     Optional<Todo> findByIdWithUser(@Param("todoId") Long todoId);
+     */
 }
